@@ -145,7 +145,7 @@ def import_page(row, row_number, page_model, form_class):
     if form.is_valid():
         try:
             with transaction.atomic():
-                if form.province
+                if form.province:
                     province_object = Province.objects.get(name=form.province)
                     if province_object:
                         form.province = province_object.pk
