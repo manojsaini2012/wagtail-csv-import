@@ -140,6 +140,10 @@ def import_page(row, row_number, page_model, form_class):
         page = page_model.objects.get(pk=page_id)
         form = form_class(row, instance=page)
     else:
+        location_in  = row['languages']
+        locations    = location_in.split(', ')
+        row['languages'] = [', '.join(locations[n:]) for n in range(len(locations))]
+
         if row['province']:
             province_object = Province.objects.filter(name=row['province']).first()
             if province_object:
