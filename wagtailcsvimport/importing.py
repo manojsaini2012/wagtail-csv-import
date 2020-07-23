@@ -145,14 +145,14 @@ def import_page(row, row_number, page_model, form_class):
             if province_object:
                 row['province'] = province_object.pk
             else:
-                n = Province.objects.create(name=row['province'], short_name=row['province'])
-                row['province'] = n.pk
+                province_object = Province.objects.create(name=row['province'], short_name=row['province'])
+                row['province'] = province_object.pk
         if row['city']:
             city_object = City.objects.filter(name=row['city']).first()
             if city_object:
                 row['city'] = city_object.pk
             else:
-                m = City.objects.create(name=row['city'], province=row['province'])
+                m = City.objects.create(name=row['city'], province=province_object)
                 row['city'] = m.pk
         form = form_class(row)
 
