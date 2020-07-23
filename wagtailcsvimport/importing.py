@@ -141,20 +141,20 @@ def import_page(row, row_number, page_model, form_class):
         form = form_class(row, instance=page)
     else:
         form = form_class(row)
-        if form.province:
-            province_object = Province.objects.get(name=form.province)
+        if form.cleaned_data['province']:
+            province_object = Province.objects.get(name=form.cleaned_data['province'])
             if province_object:
-                form.province = province_object.pk
+                form.cleaned_data['province'] = province_object.pk
             else:
-                n = Province.objects.create(name=form.province, short_name=form.province)
-                form.province = n.pk
-        if form.city:
-            city_object = City.objects.get(name=form.city)
+                n = Province.objects.create(name=form.cleaned_data['province'], short_name=form.cleaned_data['province'])
+                form.cleaned_data['province'] = n.pk
+        if form.cleaned_data['city']:
+            city_object = City.objects.get(name=form.cleaned_data['city'])
             if city_object:
-                form.city = city_object.pk
+                form.cleaned_data['city'] = city_object.pk
             else:
-                m = City.objects.create(name=form.city, province=form.province)
-                form.city = m.pk
+                m = City.objects.create(name=form.city, province=form.cleaned_data['province'])
+                form.cleaned_data['city'] = m.pk
 
 
     if form.is_valid():
