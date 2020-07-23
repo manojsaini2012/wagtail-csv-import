@@ -141,26 +141,25 @@ def import_page(row, row_number, page_model, form_class):
         form = form_class(row, instance=page)
     else:
         form = form_class(row)
+        if form.province:
+            province_object = Province.objects.get(name=form.province)
+            if province_object:
+                form.province = province_object.pk
+            else:
+                n = Province.objects.create(name=form.province, short_name=form.province)
+                form.province = n.pk
+        if form.city:
+            city_object = City.objects.get(name=form.city)
+            if city_object:
+                form.city = city_object.pk
+            else:
+                m = City.objects.create(name=form.city, province=form.province)
+                form.city = m.pk
+
 
     if form.is_valid():
         try:
             with transaction.atomic():
-                if form.province:
-                    province_object = Province.objects.get(name=form.province)
-                    if province_object:
-                        form.province = province_object.pk
-                    else:
-                        n = Province.objects.create(name=form.province, short_name=form.province)
-                        form.province = n.pk
-                if form.city:
-                    city_object = City.objects.get(name=form.city)
-                    if city_object:
-                        form.city = city_object.pk
-                    else:
-                        m = City.objects.create(name=form.city, province=form.province)
-                        form.city = m.pk
-
-
                 page = form.save()
         except ValidationError as e:
             return None, Error(_('Errors processing row number %(number)s') % {'number': row_number},
