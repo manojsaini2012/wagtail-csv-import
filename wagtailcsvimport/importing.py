@@ -10,6 +10,9 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _
 from wagtail.admin.rich_text.editors.draftail import DraftailRichTextArea
 from wagtail.core.models import Page
+from therapist.models import Province
+from therapist.models import City
+from speciality.models import SpecialityPage
 
 from .exporting import get_exportable_fields_for_model
 
@@ -142,6 +145,22 @@ def import_page(row, row_number, page_model, form_class):
     if form.is_valid():
         try:
             with transaction.atomic():
+                if form.province
+                    province_object = Province.objects.get(name=form.province)
+                    if province_object:
+                        form.province = province_object.pk
+                    else:
+                        n = Province.objects.create(name=form.province, short_name=form.province)
+                        form.province = n.pk
+                if form.city:
+                    city_object = City.objects.get(name=form.city)
+                    if city_object:
+                        form.city = city_object.pk
+                    else:
+                        m = City.objects.create(name=form.city, province=form.province)
+                        form.city = m.pk
+
+
                 page = form.save()
         except ValidationError as e:
             return None, Error(_('Errors processing row number %(number)s') % {'number': row_number},
