@@ -140,22 +140,21 @@ def import_page(row, row_number, page_model, form_class):
         page = page_model.objects.get(pk=page_id)
         form = form_class(row, instance=page)
     else:
-        form = form_class(row)
-        if form['province']:
-            province_object = Province.objects.filter(name=form['province']).first()
+        if row['province']:
+            province_object = Province.objects.filter(name=row['province']).first()
             if province_object:
-                form['province'] = province_object.pk
+                row['province'] = province_object.pk
             else:
-                n = Province.objects.create(name=form['province'], short_name=form['province'])
-                form['province'] = n.pk
-        if form['city']:
-            city_object = City.objects.filter(name=form['city']).first
+                n = Province.objects.create(name=row['province'], short_name=row['province'])
+                row['province'] = n.pk
+        if row['city']:
+            city_object = City.objects.filter(name=row['city']).first
             if city_object:
-                form['city'] = city_object.pk
+                row['city'] = city_object.pk
             else:
-                m = City.objects.create(name=form.city, province=form['province'])
-                form['city'] = m.pk
-
+                m = City.objects.create(name=row['city'], province=row['province'])
+                row['city'] = m.pk
+        form = form_class(row)
 
     if form.is_valid():
         try:
