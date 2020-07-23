@@ -150,7 +150,7 @@ def import_page(row, row_number, page_model, form_class):
         if row['city']:
             city_object = City.objects.filter(name=row['city']).first
             if city_object:
-                row['city'] = city_object.pk
+                row['city'] = city_object.id
             else:
                 m = City.objects.create(name=row['city'], province=row['province'])
                 row['city'] = m.pk
